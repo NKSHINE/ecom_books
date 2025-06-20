@@ -1,0 +1,16 @@
+.vertical-sidebar {
+  width: 200px;
+  min-height: 100vh;
+  position: fixed;
+}
+
+.vertical-sidebar a {
+  display: block;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+}
+
+.vertical-sidebar a:hover {
+  text-decoration: underline;
+}

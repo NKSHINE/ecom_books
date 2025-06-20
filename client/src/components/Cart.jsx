@@ -1,36 +1,33 @@
-// components/Cart.jsx
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-function Cart() {
+function Cart({ user }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/cart')
-      .then(res => setItems(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
-  const removeItem = (id) => {
-    axios.delete(`/api/cart/${id}`)
-      .then(() => setItems(items.filter(item => item._id !== id)))
-      .catch(err => console.error(err));
-  };
+    if (user) {
+      axios.get("http://localhost:5000/api/cart", { withCredentials: true })
+        .then(res => setItems(res.data))
+        .catch(() => alert("Failed to load cart"));
+    }
+  }, [user]);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-4">
       <h2>Your Cart</h2>
-      {items.length === 0 ? <p>No items in cart</p> : (
-        <ul className="list-group">
-          {items.map(item => (
-            <li className="list-group-item d-flex justify-content-between" key={item._id}>
-              {item.book_id.title} - Qty: {item.quantity}
-              <button className="btn btn-danger btn-sm" onClick={() => removeItem(item._id)}>Remove</button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {items.map((item, i) => (
+        <div className="card mb-2" key={i}>
+          <div className="card-body">
+            <h5>{item.book_id?.title}</h5>
+            <p>Author: {item.book_id?.author}</p>
+            <p>Quantity: {item.quantity}</p>
+            <p>Price: ₹{item.book_id?.price}</p>
+
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
+
 export default Cart;

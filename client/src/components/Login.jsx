@@ -3,20 +3,27 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 
-function Login() {
+function Login({ setUser }) {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    axios.post("http://localhost:5000/api/auth/login", { email, password })
-      .then(result => {
-        alert("Login successful");
+  e.preventDefault();
+  axios.post("http://localhost:5000/api/auth/login", { email, password }, { withCredentials: true })
+    .then(res => {
+      if (res.data.message === "Login successful") {
+        setUser(res.data.user);
         navigate("/home");
-      })
-      .catch(err => alert("Invalid credentials"));
-  };
+      }
+    })
+    .catch(err => {
+      console.error(err); // Add this
+      alert(err.response?.data?.message || "Server error");
+});
+
+};
 
 
 
