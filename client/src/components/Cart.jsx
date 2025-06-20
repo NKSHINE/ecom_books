@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import Sidebar from "./Sidebar";
 function Cart({ user }) {
   const [items, setItems] = useState([]);
 
@@ -13,7 +13,9 @@ function Cart({ user }) {
   }, [user]);
 
   return (
-    <div className="container mt-4">
+    <div className="d-flex">
+      <Sidebar />
+    <div className="container mt-4"   style={{ marginLeft: "220px" }}>
       <h2>Your Cart</h2>
       {items.map((item, i) => (
         <div className="card mb-2" key={i}>
@@ -26,6 +28,7 @@ function Cart({ user }) {
           </div>
         </div>
       ))}
+    </div>
     </div>
   );
 }

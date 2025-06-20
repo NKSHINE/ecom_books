@@ -24,16 +24,28 @@ function BookDetail() {
       book_id: id,
       quantity: qty,
       user_id: "user_id_placeholder",
-    }).then(() => alert("Added to cart"));
+    },
+    { withCredentials: true }
+  ).then(() => alert("Added to cart"));
   };
 
   const handleBuyNow = () => {
-    axios.post("http://localhost:5000/api/orders", {
-      book_id: id,
-      quantity: qty,
-      user_id: "user_id_placeholder",
-    }).then(() => alert("Order placed"));
+  const payload = {
+    items: [{ book_id: id, quantity: qty }],
+    total_price: book.price * qty,
+    shipping_address: "123, MG Road, Kochi, Kerala - 682001", // or get from user profile
+    payment_method: "Cash on Delivery",
   };
+
+  axios
+    .post("http://localhost:5000/api/orders", payload, { withCredentials: true })
+    .then(() => alert("Order placed successfully"))
+    .catch((err) => {
+      console.error(err);
+      alert("Failed to place order");
+    });
+};
+
 
   const handleAddToWishlist = () => {
     axios.post("http://localhost:5000/api/wishlist", {

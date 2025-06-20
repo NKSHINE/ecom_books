@@ -5,10 +5,11 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup from "./components/signup";
-import Login from "./components/login";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
 import Home from "./components/Home";
 import Cart from "./components/Cart";
+import Order from "./components/Order";
 import AdminDashboard from "./components/AdminDashboard";
 import BookDetail from './components/BookDetail.jsx';
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/cart" element={<Cart user={user} />} />
+        <Route path="/orders" element={<Order user={user} />} />
         <Route path="/books/:id" element={<BookDetail />} />
         
       </Routes>
