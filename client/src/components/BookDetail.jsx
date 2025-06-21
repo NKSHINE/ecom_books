@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "./Sidebar"; // Sidebar component
+import Sidebar from "./Sidebar";
 
 function BookDetail() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [qty, setQty] = useState(1);
   const [reviews, setReviews] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/books/${id}`).then((res) => {
@@ -20,38 +23,48 @@ function BookDetail() {
   }, [id]);
 
   const handleAddToCart = () => {
-    axios.post("http://localhost:5000/api/cart", {
-      book_id: id,
-      quantity: qty,
-      user_id: "user_id_placeholder",
-    },
-    { withCredentials: true }
-  ).then(() => alert("Added to cart"));
+    axios.post("http://localhost:5000/api/cart",
+      { book_id: id, quantity: qty },
+      { withCredentials: true }
+    ).then(() => alert("Added to cart"));
   };
 
   const handleBuyNow = () => {
-  const payload = {
-    items: [{ book_id: id, quantity: qty }],
-    total_price: book.price * qty,
-    shipping_address: "123, MG Road, Kochi, Kerala - 682001", // or get from user profile
-    payment_method: "Cash on Delivery",
+    setShowForm(true); // show address and payment prompt
   };
 
-  axios
-    .post("http://localhost:5000/api/orders", payload, { withCredentials: true })
-    .then(() => alert("Order placed successfully"))
-    .catch((err) => {
-      console.error(err);
-      alert("Failed to place order");
-    });
-};
+  const confirmBuyNow = () => {
+    if (!address.trim() || !paymentMethod) {
+      return alert("Please enter address and select a payment method");
+    }
 
+    const payload = {
+      items: [{ book_id: id, quantity: qty }],
+      total_price: book.price * qty,
+      shipping_address: address,
+      payment_method: paymentMethod,
+    };
+
+    axios
+      .post("http://localhost:5000/api/orders", payload, { withCredentials: true })
+      .then(() => {
+        alert("Order placed successfully");
+        setShowForm(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Failed to place order");
+      });
+  };
 
   const handleAddToWishlist = () => {
-    axios.post("http://localhost:5000/api/wishlist", {
-      book_id: id,
-      user_id: "user_id_placeholder",
-    }).then(() => alert("Added to wishlist"));
+    axios.post(
+      "http://localhost:5000/api/wishlist",
+      { book_id: id },
+      { withCredentials: true }
+    )
+    .then(() => alert("Added to wishlist"))
+    .catch(() => alert("Failed to add to wishlist"));
   };
 
   if (!book) return <p>Loading...</p>;
@@ -103,6 +116,43 @@ function BookDetail() {
             </div>
           </div>
         </div>
+
+        {/* Buy Now Prompt Form */}
+        {showForm && (
+          <div className="card mt-4 p-4 shadow">
+            <h4>Shipping Details</h4>
+
+            <div className="mb-3">
+              <label>Address</label>
+              <textarea
+                className="form-control"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>Payment Method</label>
+              <select
+                className="form-select"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                required
+              >
+                <option value="" disabled>Select Payment Method</option>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+                <option value="Online">Online</option>
+              </select>
+            </div>
+
+            <div className="d-flex justify-content-end">
+              <button className="btn btn-secondary me-2" onClick={() => setShowForm(false)}>Cancel</button>
+              <button className="btn btn-primary" onClick={confirmBuyNow}>🛍️ Confirm & Pay</button>
+            </div>
+          </div>
+        )}
 
         <hr />
         <h4>User Reviews</h4>

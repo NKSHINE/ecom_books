@@ -1,6 +1,10 @@
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+require('dotenv').config();
+dotenv.config();
+require("./auth/passport");
 const mongoose = require("./db/connection");
 const session = require("express-session");
 const authRoutes = require("./routes/authRoutes");
@@ -11,8 +15,9 @@ const orderRoutes = require("./routes/orderRoutes");
 const couponRoutes = require("./routes/couponRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
+const passport = require("passport");
 
-dotenv.config();
+
 
 const app = express();
 app.use(cors({
@@ -41,6 +46,10 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/wishlist", wishlistRoutes);
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("PlayBooks API is running...");

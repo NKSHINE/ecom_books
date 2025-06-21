@@ -16,7 +16,6 @@ exports.login = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     if (user.password !== password) return res.status(401).json({ message: "Incorrect password" });
 
-    // Save session
     req.session.user = { id: user._id, email: user.email };
     res.json({ message: "Login successful", user });
   } catch (err) {
@@ -32,3 +31,26 @@ exports.getLoggedInUser = (req, res) => {
   }
 };
 
+exports.googleAuthSuccess = async (req, res) => {
+  try {
+    const googleUser = req.user;
+
+    let user = await User.findOne({ email: googleUser.email });
+
+    if (!user) {
+      user = await User.create({
+        full_name: googleUser.name,
+        email: googleUser.email,
+        googleId: googleUser.googleId,
+        role: "user",
+        is_premium: false,
+      });
+    }
+
+    req.session.user = { id: user._id, email: user.email };
+    res.redirect("http://localhost:3000/home");
+  } catch (err) {
+    console.error("Google login error:", err);
+    res.status(500).json({ error: "Google authentication failed" });
+  }
+};

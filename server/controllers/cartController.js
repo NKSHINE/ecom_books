@@ -5,7 +5,9 @@ exports.addToCart = async (req, res) => {
   if (!req.session.user) return res.status(401).json({ message: "Unauthorized" });
 
   const { book_id, quantity } = req.body;
-  const cartItem = new CartItem({ user_id: req.session.user.id, book_id, quantity });
+  const user_id = req.session.user.id;
+
+  const cartItem = new CartItem({ user_id, book_id, quantity });
   await cartItem.save();
   res.json({ message: "Added to cart" });
 };

@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Cart from "./components/Cart";
 import Order from "./components/Order";
+import Wishlist from "./components/Wishlist";
 import AdminDashboard from "./components/AdminDashboard";
 import BookDetail from './components/BookDetail.jsx';
 
@@ -32,6 +33,8 @@ function App() {
         <Route path="/cart" element={<Cart user={user} />} />
         <Route path="/orders" element={<Order user={user} />} />
         <Route path="/books/:id" element={<BookDetail />} />
+        <Route path="/Wishlist" element={<Wishlist user={user} />}/>
+
         
       </Routes>
     </BrowserRouter>

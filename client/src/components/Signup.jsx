@@ -20,6 +20,10 @@ function Signup() {
     .catch(err => console.log(err));
   };
 
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:5000/api/auth/google", "_self");
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center bg-secondary min-vh-100">
       <div className="bg-white p-4 rounded shadow" style={{ maxWidth: "400px", width: "100%" }}>
@@ -39,6 +43,10 @@ function Signup() {
           </div>
           <button type="submit" className="btn btn-success w-100">Sign Up</button>
         </form>
+
+        <button onClick={handleGoogleLogin} className="btn btn-danger w-100 mb-3">
+          <i className="bi bi-google"></i> Login with Google
+        </button>
         <hr />
         
         <p className="mt-3 text-center">Already have an account?</p>

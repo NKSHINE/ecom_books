@@ -31,7 +31,7 @@ const orderSchema = new mongoose.Schema({
   payment_method: {
     type: String,
     enum: ['Cash on Delivery', 'Online'],
-    default: 'Cash on Delivery'
+    required: true  // ⛔ removed default, made required
   },
   status: { 
     type: String, 

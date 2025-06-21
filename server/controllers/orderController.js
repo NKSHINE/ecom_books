@@ -23,7 +23,9 @@ exports.createOrder = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user_id: req.query.user_id });
+    const userId = req.session.user.id;
+    const orders = await Order.find({ user_id:userId })
+      .populate("items.book_id");
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: err.message });
