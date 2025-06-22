@@ -6,5 +6,6 @@ router.get("/users", adminController.getAllUsers);
 router.put("/users/ban/:id", adminController.banUser);
 router.put("/users/premium/:id", adminController.upgradeToPremium);
 router.get("/dashboard", adminController.getDashboardStats);
+router.get('/stats', adminController.getDashboardStats);
 
 module.exports = router;
