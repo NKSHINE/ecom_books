@@ -48,3 +48,24 @@ exports.deleteBook = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete book' });
   }
 };
+
+exports.listBooks = async (req, res) => {
+  try {
+    const { genre, author, publisher, minPrice, maxPrice } = req.query;
+    const filter = {};
+
+    if (genre) filter.genre = genre;
+    if (author) filter.author = author;
+    if (publisher) filter.publisher = publisher;
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    const books = await Book.find(filter);
+    res.json(books);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

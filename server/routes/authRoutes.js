@@ -6,11 +6,11 @@ const authController = require("../controllers/authController");
 
 router.post("/register", authController.register);
 router.post("/login", authController.login);
-router.get("/me", authController.getLoggedInUser);
+router.get("/user", authController.getLoggedInUser);
 router.get("/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-    prompt: "select_account" // <--- if you added this
+    prompt: "select_account" 
   })
 );
 
