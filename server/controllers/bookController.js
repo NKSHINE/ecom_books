@@ -1,5 +1,8 @@
 // controllers/bookController.js
 const Book = require('../models/Book');
+const CartItem = require("../models/CartItem");
+const Wishlist = require("../models/Wishlist");
+const Order = require("../models/Order");
 
 exports.createBook = async (req, res) => {
   try {
@@ -39,15 +42,34 @@ exports.updateBook = async (req, res) => {
   }
 };
 
+
+
+// Do NOT delete orders, just handle them when viewing
+
 exports.deleteBook = async (req, res) => {
   try {
-    const book = await Book.findByIdAndDelete(req.params.id);
+    const bookId = req.params.id;
+
+    const book = await Book.findByIdAndDelete(bookId);
     if (!book) return res.status(404).json({ message: 'Book not found' });
-    res.json({ message: 'Book deleted successfully' });
+
+    // 🧹 Remove from cart
+    await CartItem.deleteMany({ book_id: bookId });
+
+    // 🧹 Remove from wishlist
+    await Wishlist.deleteMany({ book_id: bookId });
+    
+
+
+    // ❗ Do NOT delete from Order.items (keep order history intact)
+
+    res.json({ message: 'Book and related cart/wishlist items deleted successfully' });
   } catch (err) {
+    console.error("Book deletion error:", err);
     res.status(500).json({ error: 'Failed to delete book' });
   }
 };
+
 
 exports.listBooks = async (req, res) => {
   try {

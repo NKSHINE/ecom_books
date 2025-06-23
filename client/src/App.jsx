@@ -35,7 +35,9 @@ function App() {
         <Route path="/orders" element={<Order user={user} />} />
         <Route path="/books/:id" element={<BookDetail />} />
         <Route path="/Wishlist" element={<Wishlist user={user} />}/>
+
         <Route path="/logout" element={<Logout user={user} />}/>
+
 
         
       </Routes>
