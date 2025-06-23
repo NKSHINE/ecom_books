@@ -23,20 +23,20 @@ const [paymentMethod, setPaymentMethod] = useState("");
   };
 
   const updateQuantity = (bookId, newQty) => {
-  if (newQty < 1) return;
+    if (newQty < 1) return;
 
-  axios.put("http://localhost:5000/api/cart", {
-    book_id: bookId, // ✅ Use correct key name
-    quantity: newQty
-  }, { withCredentials: true })
-    .then(fetchCart)
-    .catch(() => alert("Failed to update quantity"));
-};
+    axios.put("http://localhost:5000/api/cart", {
+      book_id: bookId, // ✅ Use correct key name
+      quantity: newQty
+    }, { withCredentials: true })
+      .then(fetchCart)
+      .catch(() => alert("Failed to update quantity"));
+  };
 
   const handleOrder = () => {
     if (!address.trim() || !paymentMethod) {
-  return alert("Please enter address and select a payment method");
-}
+      return alert("Please enter address and select a payment method");
+    }
 
 
     const total = items.reduce((sum, item) => sum + item.book_id.price * item.quantity, 0);
@@ -45,12 +45,15 @@ const [paymentMethod, setPaymentMethod] = useState("");
       quantity: item.quantity
     }));
 
-    axios.post("http://localhost:5000/api/orders", {
-      items: orderItems,
-      total_price: total,
-      shipping_address: address,
-      payment_method: paymentMethod
-    }, { withCredentials: true })
+   axios.post("http://localhost:5000/api/orders", {
+  items: orderItems,
+  total_price: total,
+  shipping_address: address,
+  payment_method: paymentMethod,
+  fromCart: true, // ✅ Added
+}, { withCredentials: true })
+
+  
       .then(() => {
         alert("Order placed!");
         setItems([]);

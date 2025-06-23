@@ -13,7 +13,7 @@ exports.createOrder = async (req, res) => {
     if (!req.session.user) return res.status(401).json({ message: "Unauthorized" });
 
     const user_id = req.session.user.id;
-    const { items, total_price, shipping_address, payment_method } = req.body;
+    const { items, total_price, shipping_address, payment_method, fromCart } = req.body;
 
     // Validate book IDs
     const validItems = items.map((item) => {
@@ -26,6 +26,16 @@ exports.createOrder = async (req, res) => {
       };
     });
 
+    // Reduce stock
+    for (const item of validItems) {
+      const book = await Book.findById(item.book_id);
+      if (!book) throw new Error(`Book not found: ${item.book_id}`);
+      if (book.stock < item.quantity) throw new Error(`Insufficient stock for ${book.title}`);
+      book.stock -= item.quantity;
+      await book.save();
+    }
+
+    // Create order
     const order = new Order({
       user_id,
       items: validItems,
@@ -36,16 +46,23 @@ exports.createOrder = async (req, res) => {
 
     await order.save();
     await order.populate("items.book_id");
-     await CartItem.deleteMany({ user_id });
+
+    // ✅ Only delete from cart if order is from cart
+    if (fromCart) {
+      await CartItem.deleteMany({ user_id });
+    }
+
+    // Send confirmation email
     const user = await User.findById(user_id);
     await sendOrderConfirmation(user.email, order);
-    
+
     res.json({ message: "Order placed successfully", order });
   } catch (err) {
     console.error("Order error:", err.message);
     res.status(400).json({ error: err.message });
   }
 };
+
 
 exports.getUserOrders = async (req, res) => {
   try {

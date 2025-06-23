@@ -39,7 +39,13 @@ exports.updateQuantity = async (req, res) => {
     const userId = req.session.user.id;
     const { book_id, quantity } = req.body;
 
-    const item = await CartItem.findOne({ user_id: userId, book_id });
+    const mongoose = require("mongoose");
+
+const item = await CartItem.findOne({
+  user_id: userId,
+  book_id: new mongoose.Types.ObjectId(book_id),
+});
+
     if (!item) return res.status(404).json({ message: "Cart item not found" });
 
     item.quantity = quantity;

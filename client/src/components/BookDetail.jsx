@@ -11,6 +11,7 @@ function BookDetail() {
   const [showForm, setShowForm] = useState(false);
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [addedToCart, setAddedToCart] = useState(false); // ✅
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/books/${id}`).then((res) => {
@@ -20,17 +21,32 @@ function BookDetail() {
     axios.get(`http://localhost:5000/api/reviews/${id}`).then((res) => {
       setReviews(res.data);
     });
+
+    // ✅ Check if the book is already in the cart
+    axios
+      .get("http://localhost:5000/api/cart", { withCredentials: true })
+      .then((res) => {
+        const inCart = res.data.some((item) => item.book_id._id === id);
+        setAddedToCart(inCart);
+      })
+      .catch(() => console.log("Cart check failed"));
   }, [id]);
 
   const handleAddToCart = () => {
-    axios.post("http://localhost:5000/api/cart",
-      { book_id: id, quantity: qty },
-      { withCredentials: true }
-    ).then(() => alert("Added to cart"));
+    axios
+      .post(
+        "http://localhost:5000/api/cart",
+        { book_id: id, quantity: qty },
+        { withCredentials: true }
+      )
+      .then(() => {
+        alert("Added to cart");
+        setAddedToCart(true); // ✅ update state
+      });
   };
 
   const handleBuyNow = () => {
-    setShowForm(true); // show address and payment prompt
+    setShowForm(true);
   };
 
   const confirmBuyNow = () => {
@@ -39,14 +55,18 @@ function BookDetail() {
     }
 
     const payload = {
-      items: [{ book_id: id, quantity: qty }],
-      total_price: book.price * qty,
-      shipping_address: address,
-      payment_method: paymentMethod,
-    };
+  items: [{ book_id: id, quantity: qty }],
+  total_price: book.price * qty,
+  shipping_address: address,
+  payment_method: paymentMethod,
+  fromCart: false, // ✅ Added
+};
+
 
     axios
-      .post("http://localhost:5000/api/orders", payload, { withCredentials: true })
+      .post("http://localhost:5000/api/orders", payload, {
+        withCredentials: true,
+      })
       .then(() => {
         alert("Order placed successfully");
         setShowForm(false);
@@ -58,13 +78,14 @@ function BookDetail() {
   };
 
   const handleAddToWishlist = () => {
-    axios.post(
-      "http://localhost:5000/api/wishlist",
-      { book_id: id },
-      { withCredentials: true }
-    )
-    .then(() => alert("Added to wishlist"))
-    .catch(() => alert("Failed to add to wishlist"));
+    axios
+      .post(
+        "http://localhost:5000/api/wishlist",
+        { book_id: id },
+        { withCredentials: true }
+      )
+      .then(() => alert("Added to wishlist"))
+      .catch(() => alert("Failed to add to wishlist"));
   };
 
   if (!book) return <p>Loading...</p>;
@@ -109,7 +130,15 @@ function BookDetail() {
               </div>
 
               <div className="d-flex gap-2">
-                <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
+                {addedToCart ? (
+                  <button className="btn btn-outline-success" disabled>
+                    ✅ Added to Cart
+                  </button>
+                ) : (
+                  <button className="btn btn-primary" onClick={handleAddToCart}>
+                    Add to Cart
+                  </button>
+                )}
                 <button className="btn btn-success" onClick={handleBuyNow}>Buy Now</button>
                 <button className="btn btn-warning" onClick={handleAddToWishlist}>Add to Wishlist</button>
               </div>
