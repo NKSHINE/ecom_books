@@ -60,7 +60,7 @@ function AdminDashboard() {
         {activeSection === "stats" && <StatsSection stats={stats} />}
         {activeSection === "add" && <AddBookSection setFetchTrigger={setFetchTrigger} />}
         {activeSection === "books" && <ManageBooksSection books={books} setFetchTrigger={setFetchTrigger} />}
-        {activeSection === "users" && <ManageUsersSection stats={stats} setFetchTrigger={setFetchTrigger} />}
+        {activeSection === "users" && <ManageUsersSection stats={users} setFetchTrigger={setFetchTrigger} />}
         {activeSection === "orders" && <ManageOrdersSection orders={orders} setFetchTrigger={setFetchTrigger} />}
       </div>
     </div>

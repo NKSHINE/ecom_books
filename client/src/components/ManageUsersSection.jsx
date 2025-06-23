@@ -1,23 +1,41 @@
-// ManageUsersSection.jsx
 import React, { useState } from "react";
 import axios from "axios";
+
 function ManageUsersSection({ stats, setFetchTrigger }) {
   const [editUser, setEditUser] = useState(null);
+
   const handleUserChange = (e) => {
     const { name, value } = e.target;
-    setEditUser(prev => ({ ...prev, [name]: value }));
+
+    // Convert specific fields properly
+    let newValue = value;
+    if (name === "is_premium") newValue = value === "true"; // convert to boolean
+
+    setEditUser(prev => ({ ...prev, [name]: newValue }));
   };
+
   const handleUserUpdate = async () => {
-    await axios.put(`http://localhost:5000/api/users/${editUser._id}`, editUser);
-    setEditUser(null);
-    setFetchTrigger(p => !p);
+    try {
+      const updatedUser = {
+        ...editUser,
+        is_premium: Boolean(editUser.is_premium), // ensure boolean before sending
+      };
+
+      await axios.put(`http://localhost:5000/api/users/${editUser._id}`, updatedUser);
+      setEditUser(null);
+      setFetchTrigger(p => !p);
+    } catch (err) {
+      alert("Failed to update user");
+    }
   };
+
   const handleUserDelete = async (id) => {
     if (window.confirm("Delete this user?")) {
       await axios.delete(`http://localhost:5000/api/users/${id}`);
       setFetchTrigger(p => !p);
     }
   };
+
   return (
     <>
       {editUser && (
@@ -25,31 +43,60 @@ function ManageUsersSection({ stats, setFetchTrigger }) {
           <h5>Edit User</h5>
           <div className="row">
             <div className="col-md-3">
-              <input type="text" name="full_name" className="form-control" value={editUser.full_name} onChange={handleUserChange} />
+              <input
+                type="text"
+                name="full_name"
+                className="form-control"
+                value={editUser.full_name}
+                onChange={handleUserChange}
+              />
             </div>
             <div className="col-md-3">
-              <input type="email" name="email" className="form-control" value={editUser.email} onChange={handleUserChange} />
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={editUser.email}
+                onChange={handleUserChange}
+              />
             </div>
             <div className="col-md-2">
-              <select name="is_premium" className="form-control" value={editUser.is_premium ? "true" : "false"} onChange={(e) => setEditUser(prev => ({ ...prev, is_premium: e.target.value === "true" }))}>
+              <select
+                name="is_premium"
+                className="form-control"
+                value={editUser.is_premium ? "true" : "false"}
+                onChange={handleUserChange}
+              >
                 <option value="false">No</option>
                 <option value="true">Yes</option>
               </select>
             </div>
             <div className="col-md-2">
-              <select name="role" className="form-control" value={editUser.role} onChange={handleUserChange}>
+              <select
+                name="role"
+                className="form-control"
+                value={editUser.role}
+                onChange={handleUserChange}
+              >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
             <div className="col-md-2">
-              <select name="status" className="form-control" value={editUser.status} onChange={handleUserChange}>
+              <select
+                name="status"
+                className="form-control"
+                value={editUser.status}
+                onChange={handleUserChange}
+              >
                 <option value="active">Active</option>
                 <option value="blocked">Blocked</option>
               </select>
             </div>
             <div className="col-md-12 mt-2">
-              <button className="btn btn-success" onClick={handleUserUpdate}>Update</button>
+              <button className="btn btn-success" onClick={handleUserUpdate}>
+                Update
+              </button>
             </div>
           </div>
         </div>
@@ -70,8 +117,18 @@ function ManageUsersSection({ stats, setFetchTrigger }) {
               <td>{user.role}</td>
               <td>{user.status}</td>
               <td>
-                <button className="btn btn-warning btn-sm me-2" onClick={() => setEditUser(user)}>Edit</button>
-                <button className="btn btn-danger btn-sm" onClick={() => handleUserDelete(user._id)}>Delete</button>
+                <button
+                  className="btn btn-warning btn-sm me-2"
+                  onClick={() => setEditUser(user)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleUserDelete(user._id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -80,4 +137,5 @@ function ManageUsersSection({ stats, setFetchTrigger }) {
     </>
   );
 }
+
 export default ManageUsersSection;
