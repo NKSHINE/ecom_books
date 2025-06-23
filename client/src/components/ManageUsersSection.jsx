@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function ManageUsersSection({ stats, setFetchTrigger }) {
+function ManageUsersSection({ users, setFetchTrigger }) {
   const [editUser, setEditUser] = useState(null);
 
   const handleUserChange = (e) => {
     const { name, value } = e.target;
-
-    // Convert specific fields properly
     let newValue = value;
-    if (name === "is_premium") newValue = value === "true"; // convert to boolean
+    if (name === "is_premium") newValue = value === "true";
 
-    setEditUser(prev => ({ ...prev, [name]: newValue }));
+    setEditUser((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
   };
 
   const handleUserUpdate = async () => {
     try {
-      const updatedUser = {
-        ...editUser,
-        is_premium: Boolean(editUser.is_premium), // ensure boolean before sending
-      };
-
-      await axios.put(`http://localhost:5000/api/users/${editUser._id}`, updatedUser);
+      await axios.put(`http://localhost:5000/api/users/${editUser._id}`, editUser);
       setEditUser(null);
-      setFetchTrigger(p => !p);
+      setFetchTrigger((p) => !p);
     } catch (err) {
+      console.error(err);
       alert("Failed to update user");
     }
   };
@@ -32,7 +29,7 @@ function ManageUsersSection({ stats, setFetchTrigger }) {
   const handleUserDelete = async (id) => {
     if (window.confirm("Delete this user?")) {
       await axios.delete(`http://localhost:5000/api/users/${id}`);
-      setFetchTrigger(p => !p);
+      setFetchTrigger((p) => !p);
     }
   };
 
@@ -67,8 +64,8 @@ function ManageUsersSection({ stats, setFetchTrigger }) {
                 value={editUser.is_premium ? "true" : "false"}
                 onChange={handleUserChange}
               >
-                <option value="false">No</option>
-                <option value="true">Yes</option>
+                <option value="false">Not Premium</option>
+                <option value="true">Premium</option>
               </select>
             </div>
             <div className="col-md-2">
@@ -93,23 +90,31 @@ function ManageUsersSection({ stats, setFetchTrigger }) {
                 <option value="blocked">Blocked</option>
               </select>
             </div>
-            <div className="col-md-12 mt-2">
+            <div className="col-12 mt-2">
               <button className="btn btn-success" onClick={handleUserUpdate}>
                 Update
+              </button>
+              <button className="btn btn-secondary ms-2" onClick={() => setEditUser(null)}>
+                Cancel
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <table className="table table-bordered">
-        <thead>
+      <table className="table table-bordered mt-4">
+        <thead className="table-light">
           <tr>
-            <th>Name</th><th>Email</th><th>Premium</th><th>Role</th><th>Status</th><th>Actions</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Premium</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {stats.users?.map(user => (
+         {users?.map((user) => (
             <tr key={user._id}>
               <td>{user.full_name}</td>
               <td>{user.email}</td>

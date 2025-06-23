@@ -1,4 +1,3 @@
-// AdminDashboard.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import StatsSection from "./StatsSection";
@@ -6,11 +5,13 @@ import AddBookSection from "./AddBookSection";
 import ManageBooksSection from "./ManageBooksSection.jsx";
 import ManageUsersSection from "./ManageUsersSection";
 import ManageOrdersSection from "./ManageOrdersSection";
+
 function AdminDashboard() {
   const [activeSection, setActiveSection] = useState("stats");
   const [stats, setStats] = useState({});
   const [books, setBooks] = useState([]);
-  const[orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]); // ✅ NEW
   const [fetchTrigger, setFetchTrigger] = useState(false);
 
   const fetchStats = async () => {
@@ -24,14 +25,20 @@ function AdminDashboard() {
   };
 
   const fetchOrders = async () => {
-    const res= await axios.get("http://localhost:5000/api/orders/all");
+    const res = await axios.get("http://localhost:5000/api/orders/all");
     setOrders(res.data);
-  }
+  };
+
+  const fetchUsers = async () => {
+    const res = await axios.get("http://localhost:5000/api/users");
+    setUsers(res.data);
+  };
 
   useEffect(() => {
     fetchStats();
     fetchBooks();
     fetchOrders();
+    fetchUsers(); // ✅ NEW
   }, [fetchTrigger]);
 
   return (
@@ -40,19 +47,44 @@ function AdminDashboard() {
 
       <ul className="nav nav-tabs mt-4">
         <li className="nav-item">
-          <button className={`nav-link ${activeSection === "stats" && "active"}`} onClick={() => setActiveSection("stats")}>Stats</button>
+          <button
+            className={`nav-link ${activeSection === "stats" && "active"}`}
+            onClick={() => setActiveSection("stats")}
+          >
+            Stats
+          </button>
         </li>
         <li className="nav-item">
-          <button className={`nav-link ${activeSection === "add" && "active"}`} onClick={() => setActiveSection("add")}>Add Book</button>
+          <button
+            className={`nav-link ${activeSection === "add" && "active"}`}
+            onClick={() => setActiveSection("add")}
+          >
+            Add Book
+          </button>
         </li>
         <li className="nav-item">
-          <button className={`nav-link ${activeSection === "books" && "active"}`} onClick={() => setActiveSection("books")}>Manage Books</button>
+          <button
+            className={`nav-link ${activeSection === "books" && "active"}`}
+            onClick={() => setActiveSection("books")}
+          >
+            Manage Books
+          </button>
         </li>
         <li className="nav-item">
-          <button className={`nav-link ${activeSection === "users" && "active"}`} onClick={() => setActiveSection("users")}>Manage Users</button>
+          <button
+            className={`nav-link ${activeSection === "users" && "active"}`}
+            onClick={() => setActiveSection("users")}
+          >
+            Manage Users
+          </button>
         </li>
         <li className="nav-item">
-          <button className={`nav-link ${activeSection === "orders" && "active"}`} onClick={() => setActiveSection("orders")}>Manage Orders</button>
+          <button
+            className={`nav-link ${activeSection === "orders" && "active"}`}
+            onClick={() => setActiveSection("orders")}
+          >
+            Manage Orders
+          </button>
         </li>
       </ul>
 
@@ -60,7 +92,7 @@ function AdminDashboard() {
         {activeSection === "stats" && <StatsSection stats={stats} />}
         {activeSection === "add" && <AddBookSection setFetchTrigger={setFetchTrigger} />}
         {activeSection === "books" && <ManageBooksSection books={books} setFetchTrigger={setFetchTrigger} />}
-        {activeSection === "users" && <ManageUsersSection stats={users} setFetchTrigger={setFetchTrigger} />}
+        {activeSection === "users" && <ManageUsersSection users={users} setFetchTrigger={setFetchTrigger} />} {/* ✅ Fixed */}
         {activeSection === "orders" && <ManageOrdersSection orders={orders} setFetchTrigger={setFetchTrigger} />}
       </div>
     </div>
