@@ -57,14 +57,20 @@ exports.getUserOrders = async (req, res) => {
   }
 };
 
+// Example: controllers/orderController.js
+
+
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate("items.book_id");
+    const orders = await Order.find()
+      .populate("user_id", "full_name")
+      .populate("items.book_id", "title");
     res.json(orders);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
+
 
 exports.updateOrderStatus = async (req, res) => {
   try {
@@ -76,5 +82,33 @@ exports.updateOrderStatus = async (req, res) => {
     res.json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.cancelOrder = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const orderId = req.params.id;
+
+    const order = await Order.findOne({ _id: orderId, user_id: userId });
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    if (order.status === "cancelled") {
+      return res.status(400).json({ message: "Order already cancelled" });
+    }
+
+    if (order.status === "Delivered") {
+      return res.status(400).json({ message: "Delivered orders cannot be cancelled" });
+    }
+
+    order.status = "cancelled";
+    await order.save();
+
+    res.json({ message: "Order cancelled successfully" });
+  } catch (err) {
+    console.error("Cancel error:", err);
+    res.status(500).json({ error: "Failed to cancel order" });
   }
 };

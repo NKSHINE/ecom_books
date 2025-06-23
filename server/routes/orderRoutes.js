@@ -6,5 +6,9 @@ router.post("/", orderController.createOrder);
 router.get("/", orderController.getUserOrders);
 router.get("/all", orderController.getAllOrders); // for admin
 router.put("/:id/status", orderController.updateOrderStatus);
+router.put("/cancel/:id", orderController.cancelOrder);
+
+
+
 
 module.exports = router;
