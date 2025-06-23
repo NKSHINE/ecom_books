@@ -40,6 +40,7 @@ function ManageUsersSection({ users, setFetchTrigger }) {
           <h5>Edit User</h5>
           <div className="row">
             <div className="col-md-3">
+              <label className="form-label">Name: </label>
               <input
                 type="text"
                 name="full_name"
@@ -49,6 +50,7 @@ function ManageUsersSection({ users, setFetchTrigger }) {
               />
             </div>
             <div className="col-md-3">
+              <label className="form-label">Email</label>
               <input
                 type="email"
                 name="email"
@@ -58,6 +60,7 @@ function ManageUsersSection({ users, setFetchTrigger }) {
               />
             </div>
             <div className="col-md-2">
+              <label className="form-label">Premium</label>
               <select
                 name="is_premium"
                 className="form-control"
@@ -69,6 +72,7 @@ function ManageUsersSection({ users, setFetchTrigger }) {
               </select>
             </div>
             <div className="col-md-2">
+              <label className="form-label">Role</label>
               <select
                 name="role"
                 className="form-control"
@@ -80,6 +84,7 @@ function ManageUsersSection({ users, setFetchTrigger }) {
               </select>
             </div>
             <div className="col-md-2">
+              <label className="form-label">Status</label>
               <select
                 name="status"
                 className="form-control"

@@ -7,7 +7,7 @@ exports.getAdminStats = async (req, res) => {
     User.countDocuments(),
     User.countDocuments({ is_premium: true }),
     Order.countDocuments(),
-    Order.aggregate([{ $group: { _id: null, total: { $sum: "$totalAmount" } } }]),
+    Order.aggregate([{ $group: { _id: null, total: { $sum: "$total_price" } } }]),
     Book.aggregate([{ $group: { _id: "$genre", count: { $sum: 1 } } }]),
     Book.find({ stock: { $lte: 5 } }, "_id title stock"),
     User.find({}, "full_name email address role") // Send users for table
