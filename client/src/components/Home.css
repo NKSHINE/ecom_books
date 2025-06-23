@@ -94,3 +94,78 @@ body {
   margin: 20px 0;
   color: #333;
 }
+
+
+
+/* Book Grid Layout */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Book Card Styling */
+.book-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.2s;
+  text-align: center;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Book Image */
+.book-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Book Link */
+.book-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* Filter Form Styling */
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.filter-form select,
+.filter-form input {
+  padding: 8px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1 1 180px;
+}
+
+.filter-form button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-form button:hover {
+  background-color: #0056b3;
+}

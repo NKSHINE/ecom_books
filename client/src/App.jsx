@@ -13,6 +13,7 @@ import Order from "./components/Order";
 import Wishlist from "./components/Wishlist";
 import AdminDashboard from "./components/AdminDashboard";
 import BookDetail from './components/BookDetail.jsx';
+import Logout from "./components/logout";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -34,7 +35,7 @@ function App() {
         <Route path="/orders" element={<Order user={user} />} />
         <Route path="/books/:id" element={<BookDetail />} />
         <Route path="/Wishlist" element={<Wishlist user={user} />}/>
-      
+        <Route path="/logout" element={<Logout user={user} />}/>
 
         
       </Routes>

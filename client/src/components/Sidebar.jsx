@@ -1,46 +1,56 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './home.css';
 
-function Sidebar() {
+function Sidebar({ user }) {
   return (
-    <div style={styles.sidebar}>
-      <h4 className="text-white text-center py-3">📚 Menu</h4>
-      <ul className="list-unstyled ps-3">
-        <li className="mb-3">
-          <Link to="/home" className="text-white text-decoration-none">🏠 Home</Link>
+    <div className="top-navbar">
+      <div className="navbar-left">
+        <Link to="/home" className="logo">PlayBooks</Link>
+        <input type="text" className="search-bar" placeholder="Search books..." />
+      </div>
+
+      <ul className="navbar-links">
+        <li>
+          <Link to="/cart">
+            <img src="/icons/cart.png" alt="Cart" className="nav-icon white-icon" />Cart
+          </Link>
         </li>
-        <li className="mb-3">
-          <Link to="/cart" className="text-white text-decoration-none">🛒 Cart</Link>
+        <li>
+          <Link to="/orders">
+            <img src="/icons/booking.png" alt="Orders" className="nav-icon white-icon" />Orders
+          </Link>
         </li>
-        <li className="mb-3">
-          <Link to="/orders" className="text-white text-decoration-none">📦 Orders</Link>
+        <li>
+          <Link to="/wishlist">
+            <img src="/icons/heart.png" alt="Wishlist" className="nav-icon white-icon" />Wishlist
+          </Link>
         </li>
-        <li className="mb-3">
-          <Link to="/wishlist" className="text-white text-decoration-none">💖 Wishlist</Link>
-        </li>
-        <li className="mb-3">
-          <Link to="/profile" className="text-white text-decoration-none">👤 Profile</Link>
-        </li>
-        <li className="mb-3">
-          <Link to="/logout" className="text-white text-decoration-none">🚪 Logout</Link>
-        </li>
+
+        {user ? (
+          <>
+            <li>
+              <Link to="/profile">
+                <img src="/icons/user.png" alt="Profile" className="nav-icon white-icon" />Profile
+              </Link>
+            </li>
+            <li>
+              <Link to="/logout">Logout</Link>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/signup">Sign Up</Link>
+            </li>
+          </>
+        )}
       </ul>
     </div>
   );
 }
-
-const styles = {
-  sidebar: {
-    width: '200px',
-    height: '100vh',
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    backgroundColor: '#343a40',
-    paddingTop: '60px',
-    overflowY: 'auto',
-    zIndex: '1000',
-  },
-};
 
 export default Sidebar;
