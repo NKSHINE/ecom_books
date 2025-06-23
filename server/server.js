@@ -19,6 +19,7 @@ const passport = require("passport");
 
 
 
+
 const app = express();
 app.use(cors({
   origin: "http://localhost:3000",
@@ -46,6 +47,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/wishlist", wishlistRoutes);
+
 
 
 app.use(passport.initialize());

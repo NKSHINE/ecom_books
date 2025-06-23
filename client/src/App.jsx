@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import Logout from "./components/logout";
 import Home from "./components/Home";
 import Cart from "./components/Cart";
 import Order from "./components/Order";
@@ -34,6 +35,7 @@ function App() {
         <Route path="/orders" element={<Order user={user} />} />
         <Route path="/books/:id" element={<BookDetail />} />
         <Route path="/Wishlist" element={<Wishlist user={user} />}/>
+        <Route path="/logout" element={<Logout user={user} />}/>
 
         
       </Routes>
