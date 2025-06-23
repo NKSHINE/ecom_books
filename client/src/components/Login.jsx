@@ -12,7 +12,7 @@ function Login({ setUser }) {
     axios.post("http://localhost:5000/api/auth/login", { email, password }, { withCredentials: true })
       .then(res => {
         if (res.data.message === "Login successful") {
-          setUser(res.data.user);
+          
           navigate("/home");
         }
       })

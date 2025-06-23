@@ -3,9 +3,11 @@ const User = require("../models/User");
 exports.register = async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.json(user);
+    
+    req.session.user = { id: user._id, email: user.email };
+    res.json({ message: "Signup successful", user });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: "Server error" });
   }
 };
 

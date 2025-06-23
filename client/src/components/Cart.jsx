@@ -10,9 +10,10 @@ const [paymentMethod, setPaymentMethod] = useState("");
 
   
   useEffect(() => {
-    if (user) {
+   
+      console.log("Cart user:", user); 
       fetchCart();
-    }
+    
   }, [user]);
 
   const fetchCart = () => {
@@ -22,15 +23,15 @@ const [paymentMethod, setPaymentMethod] = useState("");
   };
 
   const updateQuantity = (bookId, newQty) => {
-    if (newQty < 1) return;
+  if (newQty < 1) return;
 
-    axios.put("http://localhost:5000/api/cart", {
-      book_id: bookId,
-      quantity: newQty
-    }, { withCredentials: true })
-      .then(fetchCart)
-      .catch(() => alert("Failed to update quantity"));
-  };
+  axios.put("http://localhost:5000/api/cart", {
+    book_id: bookId, // ✅ Use correct key name
+    quantity: newQty
+  }, { withCredentials: true })
+    .then(fetchCart)
+    .catch(() => alert("Failed to update quantity"));
+};
 
   const handleOrder = () => {
     if (!address.trim() || !paymentMethod) {

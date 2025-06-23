@@ -1,6 +1,8 @@
 const Order = require("../models/Order");
 const Book = require("../models/Book");
 const User = require("../models/User");
+const CartItem = require('../models/CartItem');
+
 const mongoose = require("mongoose");
 
 const sendOrderConfirmation = require("../utils/sendMail");
@@ -34,10 +36,10 @@ exports.createOrder = async (req, res) => {
 
     await order.save();
     await order.populate("items.book_id");
-
+     await CartItem.deleteMany({ user_id });
     const user = await User.findById(user_id);
     await sendOrderConfirmation(user.email, order);
-
+    
     res.json({ message: "Order placed successfully", order });
   } catch (err) {
     console.error("Order error:", err.message);

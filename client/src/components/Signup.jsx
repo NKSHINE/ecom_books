@@ -10,15 +10,24 @@ function Signup() {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    axios.post("http://localhost:5000/api/auth/register", {
-      full_name: name,
-      email,
-      password
-    })
-    .then(() => navigate("/login"))
-    .catch(err => console.log(err));
-  };
+  e.preventDefault();
+  axios.post("http://localhost:5000/api/auth/register", {
+    full_name: name,
+    email,
+    password
+  }, { withCredentials: true })
+  .then(res => {
+   
+    if (res.data.message === "Signup successful") {
+      navigate("/home");
+    }
+  })
+  .catch(err => {
+   
+    alert(err.response?.data?.message || "Server error");
+  });
+};
+
 
   const handleGoogleLogin = () => {
     window.open("http://localhost:5000/api/auth/google", "_self");
