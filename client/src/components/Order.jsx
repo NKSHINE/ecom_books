@@ -29,7 +29,7 @@ function Orders({  }) {
       .then(() => {
         alert("Order cancelled");
         setOrders((prev) =>
-          prev.map((o) => (o._id === id ? { ...o, status: "Cancelled" } : o))
+          prev.map((o) => (o._id === id ? { ...o, status: "cancelled" } : o))
         );
       })
       .catch((err) => {
@@ -58,7 +58,7 @@ function Orders({  }) {
                   <h5>Order #{idx + 1}</h5>
                   <p className="mb-0">
                     <strong>Status:</strong> {order.status}
-                    {order.status !== "Cancelled" && order.status !== "Delivered" && (
+                    {order.status !== "cancelled" && order.status !== "delivered" && (
                       <button
                         className="btn btn-sm btn-outline-danger ms-3"
                         onClick={() => cancelOrder(order._id)}
