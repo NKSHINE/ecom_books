@@ -34,5 +34,8 @@ router.post('/logout', (req, res) => {
   });
 });
 
+
+router.post("/verify-password", authController.verifyPassword);
+
 module.exports = router;
 

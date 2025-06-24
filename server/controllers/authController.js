@@ -25,11 +25,19 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.getLoggedInUser = (req, res) => {
-  if (req.session.user) {
-    res.json({ user: req.session.user });
-  } else {
-    res.status(401).json({ message: "Not logged in" });
+exports.getLoggedInUser = async (req, res) => {
+   if (!req.session.user) {
+    return res.status(401).json({ message: 'Not logged in' });
+  }
+
+  try {
+    const user = await User.findById(req.session.user.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching user:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -55,4 +63,16 @@ exports.googleAuthSuccess = async (req, res) => {
     console.error("Google login error:", err);
     res.status(500).json({ error: "Google authentication failed" });
   }
+};
+
+
+exports.verifyPassword = async (req, res) => {
+  const { password } = req.body;
+  const user = await User.findById(req.session?.user?.id);
+
+  if (!user || user.password !== password) {
+    return res.status(401).json({ message: "Incorrect password" });
+  }
+
+  res.json({ success: true });
 };

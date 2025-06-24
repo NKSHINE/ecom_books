@@ -12,7 +12,7 @@ function BookDetail() {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [addedToCart, setAddedToCart] = useState(false); // ✅
-
+  const [user, setUser] = useState({});
   useEffect(() => {
     axios.get(`http://localhost:5000/api/books/${id}`).then((res) => {
       setBook(res.data);
@@ -92,7 +92,7 @@ function BookDetail() {
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar user={user}/>
 
       <div className="container mt-4" style={{ marginLeft: "220px" }}>
         <div className="card p-4 shadow">

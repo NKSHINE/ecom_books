@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 dotenv.config();
 require("./auth/passport");
@@ -16,6 +17,7 @@ const couponRoutes = require("./routes/couponRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const userRoutes = require("./routes/userRoutes");
+const profileRoutes = require('./routes/profileRoutes');
 const passport = require("passport");
 
 
@@ -48,6 +50,7 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/users", userRoutes);  
 app.use("/api/wishlist", wishlistRoutes);
+app.use('/api/profile', profileRoutes);
 
 
 

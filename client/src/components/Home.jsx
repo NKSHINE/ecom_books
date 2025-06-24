@@ -5,6 +5,7 @@ import './home.css';
 import Sidebar from './Sidebar';
 
 function Home() {
+  const [user, setUser] = useState(null);
   const [books, setBooks] = useState([]);
   const [allBooks, setAllBooks] = useState([]);
   const [filters, setFilters] = useState({
@@ -14,16 +15,16 @@ function Home() {
     minPrice: '',
     maxPrice: ''
   });
-  const [user, setUser] = useState(null);
+  
 
- useEffect(() => {
-  axios.get('http://localhost:5000/api/auth/user', { withCredentials: true })
-    .then(res => {
-      console.log('Fetched user:', res.data); // 👈 Add this
-      setUser(res.data);
-    })
-    .catch(() => setUser(null));
-}, []);
+   useEffect(() => {
+    axios.get('http://localhost:5000/api/auth/user', { withCredentials: true })
+      .then(res => {
+        console.log('Fetched user:', res.data); // 👈 Add this
+        setUser(res.data);
+      })
+      .catch(() => setUser(null));
+  }, []);
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/books')
@@ -90,10 +91,10 @@ function Home() {
         </form>
 
         {user && (
-  <div className="greeting-text">
-    Hi, {user.full_name || 'User'}!
-  </div>
-)}
+          <div className="greeting-text">
+            Hi, {user.full_name || 'User'}!
+          </div>
+        )}
 
         {/* Books Grid */}
         <div className="book-section">
@@ -103,15 +104,15 @@ function Home() {
             ) : (
               books.map(book => (
                 <div key={book._id} className="book-card">
-  <Link to={`/books/${book._id}`} className="book-link">
-    <img src={book.image} alt={book.title} className="book-img" />
-    <h5>{book.title}</h5>
-    <div className="book-meta">
-      <span>{book.author}</span>
-      <span className="price">₹{book.price}</span>
-    </div>
-  </Link>
-</div>
+                  <Link to={`/books/${book._id}`} className="book-link">
+                    <img src={book.image} alt={book.title} className="book-img" />
+                    <h5>{book.title}</h5>
+                    <div className="book-meta">
+                      <span>{book.author}</span>
+                      <span className="price">₹{book.price}</span>
+                    </div>
+                  </Link>
+                </div>
               ))
             )}
           </div>
