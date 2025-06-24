@@ -1,0 +1,82 @@
+.wishlist-wrapper {
+  min-width: 900px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.wishlist-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.wishlist-item {
+  flex: 1 1 calc(50% - 1rem); /* Two per row with gap */
+  max-width: 300px;
+}
+
+.book-card2 {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.book-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.book-card2 h5 {
+  font-size: 1rem;
+  margin: 0.5rem 0 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.book-meta .author {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  display: inline-block;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .wishlist-item {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .wishlist-wrapper {
+    min-width: unset;
+    padding: 1rem;
+  }
+}

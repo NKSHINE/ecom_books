@@ -39,7 +39,7 @@ function StatsSection() {
 
   return (
     <div className="container mt-4">
-      <h3>📈 Statistics Overview</h3>
+      <h3>Statistics Overview</h3>
 
       {/* Summary Cards */}
       <div className="row text-center my-4">
@@ -71,7 +71,7 @@ function StatsSection() {
 
       {/* Genre Distribution */}
       <div className="mt-5">
-        <h4>📚 Genre Distribution</h4>
+        <h4>Genre Distribution</h4>
         {genreChartData.labels?.length > 0 ? (
           <Bar
             data={genreChartData}
@@ -90,7 +90,7 @@ function StatsSection() {
 
       {/* Low Stock Alerts */}
       <div className="mt-5">
-        <h4>⚠️ Low Stock Alerts</h4>
+        <h4>Low Stock Alerts</h4>
         <ul className="list-group">
           {stats.lowStockBooks?.length > 0 ? (
             stats.lowStockBooks.map((book) => (

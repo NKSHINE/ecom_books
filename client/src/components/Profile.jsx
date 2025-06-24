@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
-
+import "./profile.css"; 
 function Profile() {
   const [user, setUser] = useState({});
   const [originalUser, setOriginalUser] = useState({});
@@ -105,59 +105,75 @@ function Profile() {
   };
 
   return (
-    <div className="d-flex">
+     <div className="d-flex">
       <Sidebar user={user} />
-      <div className="container mt-4" style={{ marginLeft: "220px" }}>
-        <h2>User Profile</h2>
+      <div className="profile-container">
+        <div className="profile-box">
+          <img
+            src="/icons/boy.png"
+            alt="Profile"
+            className="profile-image"
+          />
+          <h2>User Profile</h2>
 
-        {renderEditableInput("Name:", "full_name")}
-        {renderEditableInput("Email:", "email")}
+          {renderEditableInput("Name:", "full_name")}
+          {renderEditableInput("Email:", "email")}
 
-        <div className="mb-3">
-          <label>Role:</label>
-          <input className="form-control" value={user.role || ""} readOnly />
-        </div>
+          <div className="form-row">
+            <label>Role:</label>
+            <input className="form-control" value={user.role || ""} readOnly />
+          </div>
 
-        <div className="mb-3">
-          <label>Status:</label>
-          <input className="form-control" value={user.status || ""} readOnly />
-        </div>
+          <div className="form-row">
+            <label>Status:</label>
+            <input className="form-control" value={user.status || ""} readOnly />
+          </div>
 
-        <div className="mb-3">
-          <label>Premium:</label>
-          <input className="form-control" value={user.is_premium ? "Yes" : "No"} readOnly />
-        </div>
+          <div className="form-row">
+            <label>Premium:</label>
+            <input
+              className="form-control"
+              value={user.is_premium ? "Yes" : "No"}
+              readOnly
+            />
+          </div>
 
-        <div className="mb-3">
-          <button className="btn btn-link" onClick={() => setShowPasswordPopup(true)}>
-            🔒 Edit Password
-          </button>
-        </div>
-
-        {isEditing && (
-          <>
-            <button className="btn btn-success me-2" onClick={handleSave}>
-              Save
+          <div className="mb-3">
+            <button
+              className="edit-password-btn"
+              onClick={() => setShowPasswordPopup(true)}
+            >
+              Edit Password
             </button>
-            <button className="btn btn-secondary" onClick={handleCancel}>
-              Cancel
-            </button>
-          </>
-        )}
+          </div>
 
-        {/* 🔐 Password Popup */}
+          {isEditing && (
+            <div className="action-buttons">
+              <button className="btn btn-success me-2" onClick={handleSave}>
+                Save
+              </button>
+              <button className="btn btn-secondary" onClick={handleCancel}>
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+
         {showPasswordPopup && (
           <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
             <div className="modal-dialog modal-sm">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Change Password</h5>
-                  <button className="btn-close" onClick={() => {
-                    setShowPasswordPopup(false);
-                    setIsVerified(false);
-                    setCurrentPassword("");
-                    setNewPassword("");
-                  }}></button>
+                  <button
+                    className="btn-close"
+                    onClick={() => {
+                      setShowPasswordPopup(false);
+                      setIsVerified(false);
+                      setCurrentPassword("");
+                      setNewPassword("");
+                    }}
+                  ></button>
                 </div>
                 <div className="modal-body">
                   {!isVerified ? (
@@ -169,7 +185,10 @@ function Profile() {
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
                       />
-                      <button className="btn btn-primary mt-2" onClick={handleVerifyPassword}>
+                      <button
+                        className="btn btn-primary mt-2"
+                        onClick={handleVerifyPassword}
+                      >
                         Verify
                       </button>
                     </>
@@ -182,7 +201,10 @@ function Profile() {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                       />
-                      <button className="btn btn-success mt-2" onClick={handlePasswordChange}>
+                      <button
+                        className="btn btn-success mt-2"
+                        onClick={handlePasswordChange}
+                      >
                         Save New Password
                       </button>
                     </>

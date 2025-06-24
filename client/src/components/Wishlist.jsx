@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import "./Wishlist.css";
 
 function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -36,36 +37,42 @@ function Wishlist() {
   return (
     <div className="d-flex">
       <Sidebar user={user} />
-      <div className="container mt-4" style={{ marginLeft: "220px" }}>
-        <h2 className="mb-4">💖 Your Wishlist</h2>
+      <div className="container mt-4">
+        <h2 className="mb-4 text-center">Your Wishlist</h2>
 
         {!user ? (
-          <p>Please <a href="/login">login</a> to view your wishlist.</p>
+          <p className="text-center">
+            Please <a href="/login">login</a> to view your wishlist.
+          </p>
         ) : wishlist.length === 0 ? (
-          <p>No items in wishlist.</p>
+          <p className="text-center">No items in wishlist.</p>
         ) : (
-          <div className="row">
-            {wishlist.map((item) => (
-              <div key={item._id} className="col-md-3 mb-4">
-                <div className="card h-100 shadow">
-                  <img
-                    src={item.book_id?.image}
-                    className="card-img-top"
-                    alt={item.book_id?.title}
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{item.book_id?.title}</h5>
-                    <p className="card-text">Author: {item.book_id?.author}</p>
-                    <button
-                      className="btn btn-outline-danger btn-sm"
-                      onClick={() => handleRemove(item._id)}
-                    >
-                      Remove
-                    </button>
+          <div className="d-flex justify-content-center">
+            <div className="wishlist-wrapper">
+              <div className="wishlist-grid">
+                {wishlist.map((item) => (
+                  <div key={item._id} className="wishlist-item">
+                    <div className="book-card2">
+                      <img
+                        src={item.book_id?.image}
+                        className="book-img"
+                        alt={item.book_id?.title}
+                      />
+                      <h5>{item.book_id?.title}</h5>
+                      <div className="book-meta d-flex justify-content-between align-items-center">
+                        <span className="author">{item.book_id?.author}</span>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleRemove(item._id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         )}
       </div>

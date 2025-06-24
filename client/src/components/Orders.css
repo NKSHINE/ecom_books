@@ -1,0 +1,29 @@
+.order-wrapper {
+  max-width:100%;
+  padding: 20px;
+  background: #fdfdfd;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom:20px;
+  
+}
+
+.order-box {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.item-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.order-img {
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}

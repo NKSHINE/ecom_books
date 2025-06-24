@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
-
+import "./Orders.css"; 
 function Orders({  }) {
   const [orders, setOrders] = useState([]);
   const [user, setUser] = useState(null);
@@ -40,25 +40,25 @@ function Orders({  }) {
 
   return (
     <div className="d-flex">
-      <Sidebar user={user}/>
-      <div className="container mt-4" style={{ marginLeft: "220px" }}>
-        <h2 className="mb-4">📦 Your Orders</h2>
+      <Sidebar user={user} />
+      <div className="container mt-4">
+        <h2 className="mb-4 text-center">📦 Your Orders</h2>
 
         {!user ? (
-          <p>
+          <p className="text-center">
             Please <a href="/login">login</a> to view your orders.
           </p>
         ) : orders.length === 0 ? (
-          <p>You haven't placed any orders yet.</p>
+          <p className="text-center">You haven't placed any orders yet.</p>
         ) : (
-          orders.map((order, idx) => (
-            <div key={idx} className="card mb-4 shadow">
-              <div className="card-body">
-                <h5 className="card-title">Order #{idx + 1}</h5>
-                <p>
-                  <strong>Status:</strong> {order.status}
-                  {order.status !== "Cancelled" &&
-                    order.status !== "Delivered" && (
+          <div className="order-wrapper mx-auto">
+            {orders.map((order, idx) => (
+              <div key={idx} className="order-box shadow mb-4 p-3 bg-white rounded">
+                <div className="d-flex justify-content-between mb-3">
+                  <h5>Order #{idx + 1}</h5>
+                  <p className="mb-0">
+                    <strong>Status:</strong> {order.status}
+                    {order.status !== "Cancelled" && order.status !== "Delivered" && (
                       <button
                         className="btn btn-sm btn-outline-danger ms-3"
                         onClick={() => cancelOrder(order._id)}
@@ -66,56 +66,36 @@ function Orders({  }) {
                         Cancel Order
                       </button>
                     )}
-                </p>
+                  </p>
+                </div>
 
-                <p>
-                  <strong>Total:</strong> ₹{order.total_price}
-                </p>
-                <p>
-                  <strong>Address:</strong> {order.shipping_address}
-                </p>
-                <p>
-                  <strong>Payment:</strong> {order.payment_method}
-                </p>
-                <p>
-                  <strong>Ordered On:</strong>{" "}
-                  {new Date(order.createdAt).toLocaleString()}
-                </p>
-
-                <div className="row">
+                <div className="row g-3">
                   {order.items.map((item, i) => {
                     const isDeleted = !item.book_id;
 
                     return (
-                      <div key={i} className="col-md-4 mb-3">
-                        <div className="card h-100">
+                      <div key={i} className="col-md-12">
+                        <div className="d-flex align-items-center item-box shadow-sm p-2 bg-light rounded">
                           <img
                             src={
                               isDeleted
                                 ? "https://via.placeholder.com/150?text=Book+Deleted"
                                 : item.book_id.image
                             }
-                            className="card-img-top"
                             alt={
-                              isDeleted
-                                ? "Deleted Book"
-                                : item.book_id.title
+                              isDeleted ? "Deleted Book" : item.book_id.title
                             }
-                            style={{ height: "200px", objectFit: "cover" }}
+                            className="order-img rounded"
                           />
-                          <div className="card-body">
-                            <h6 className="card-title">
-                              {isDeleted
-                                ? "Book Deleted"
-                                : item.book_id.title}
-                            </h6>
-                            <p className="card-text">
+                          <div className="ms-3 flex-grow-1">
+                            <h6>{isDeleted ? "Book Deleted" : item.book_id.title}</h6>
+                            <p className="mb-1">
                               {isDeleted
                                 ? "No author information"
                                 : `Author: ${item.book_id.author}`}
                             </p>
-                            <p className="card-text">Qty: {item.quantity}</p>
-                            <p className="card-text">
+                            <p className="mb-1">Qty: {item.quantity}</p>
+                            <p className="mb-1">
                               {isDeleted
                                 ? "Price: N/A"
                                 : `Price: ₹${item.book_id.price}`}
@@ -126,11 +106,19 @@ function Orders({  }) {
                     );
                   })}
                 </div>
+
+                <div className="mt-3">
+                  <p><strong>Total:</strong> ₹{order.total_price}</p>
+                  <p><strong>Address:</strong> {order.shipping_address}</p>
+                  <p><strong>Payment:</strong> {order.payment_method}</p>
+                  <p><strong>Ordered On:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
+      
     </div>
   );
 }
