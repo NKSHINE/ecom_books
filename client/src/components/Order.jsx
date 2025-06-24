@@ -38,6 +38,55 @@ function Orders({  }) {
       });
   };
 
+ const handlePrint = (order) => {
+  const newWindow = window.open('', '_blank');
+
+  const itemsHTML = order.items.map(item => {
+    const isDeleted = !item.book_id;
+    return `
+      <div style="margin-bottom: 10px;">
+        <strong>Title:</strong> ${isDeleted ? 'Deleted Book' : item.book_id.title}<br/>
+        <strong>Author:</strong> ${isDeleted ? 'N/A' : item.book_id.author}<br/>
+        <strong>Quantity:</strong> ${item.quantity}<br/>
+        <strong>Price:</strong> ₹${isDeleted ? 'N/A' : item.book_id.price}<br/>
+      </div>
+    `;
+  }).join('');
+
+  newWindow.document.write(`
+    <html>
+      <head>
+        <title>Invoice</title>
+        <style>
+          body { font-family: Arial; padding: 20px; }
+          h2 { text-align: center; }
+          .section { margin-bottom: 20px; }
+          .item-box { border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; }
+        </style>
+      </head>
+      <body>
+        <h2>📦 Order Invoice</h2>
+        <div class="section"><strong>Order ID:</strong> ${order._id}</div>
+        <div class="section"><strong>Status:</strong> ${order.status}</div>
+        <div class="section"><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleString()}</div>
+        <div class="section"><strong>Shipping Address:</strong> ${order.shipping_address}</div>
+        <div class="section"><strong>Payment Method:</strong> ${order.payment_method}</div>
+        <hr/>
+        <div class="section">
+          <h4>Items:</h4>
+          ${itemsHTML}
+        </div>
+        <hr/>
+        <div class="section"><strong>Total Price:</strong> ₹${order.total_price}</div>
+      </body>
+    </html>
+  `);
+
+  newWindow.document.close();
+  newWindow.print();
+};
+
+
   return (
     <div className="d-flex">
       <Sidebar user={user} />
@@ -58,14 +107,23 @@ function Orders({  }) {
                   <h5>Order #{idx + 1}</h5>
                   <p className="mb-0">
                     <strong>Status:</strong> {order.status}
-                    {order.status !== "cancelled" && order.status !== "delivered" && (
-                      <button
-                        className="btn btn-sm btn-outline-danger ms-3"
-                        onClick={() => cancelOrder(order._id)}
-                      >
-                        Cancel Order
-                      </button>
-                    )}
+                    {!["cancelled", "delivered"].includes(order.status?.toLowerCase().trim()) && (
+  <>
+    <button
+      className="btn btn-sm btn-outline-danger ms-3"
+      onClick={() => cancelOrder(order._id)}
+    >
+      Cancel Order
+    </button>
+    <button
+      className="btn btn-sm btn-outline-primary ms-2"
+      onClick={() => handlePrint(order)}
+    >
+      🧾 Print Invoice
+    </button>
+  </>
+)}
+
                   </p>
                 </div>
 
