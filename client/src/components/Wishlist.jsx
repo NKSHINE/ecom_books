@@ -49,9 +49,9 @@ function Wishlist() {
         ) : (
           <div className="d-flex justify-content-center">
             <div className="wishlist-wrapper">
-              <div className="row">
+              <div className="wishlist-grid">
                 {wishlist.map((item) => (
-                  <div key={item._id} className="wishlist-item col-md-3 col-sm-6 mb-4">
+                  <div key={item._id} className="wishlist-item">
                     <div className="book-card2">
                       <img
                         src={item.book_id?.image}

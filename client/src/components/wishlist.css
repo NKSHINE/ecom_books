@@ -1,4 +1,5 @@
 .wishlist-wrapper {
+  min-width: 900px;
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
@@ -7,21 +8,27 @@
   border-radius: 10px;
 }
 
-.wishlist-item {
+.wishlist-grid {
   display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
   justify-content: center;
-  margin-bottom: 1.5rem;
+}
+
+.wishlist-item {
+  flex: 1 1 calc(50% - 1rem); /* Two per row with gap */
+  max-width: 300px;
 }
 
 .book-card2 {
-  width: 100%;
-  max-width: 720px;
   background-color: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
   transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .book-card2:hover {
@@ -59,4 +66,17 @@
   text-overflow: ellipsis;
   max-width: 120px;
   display: inline-block;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .wishlist-item {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .wishlist-wrapper {
+    min-width: unset;
+    padding: 1rem;
+  }
 }
