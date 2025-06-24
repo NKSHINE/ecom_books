@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import "./Cart.css";
 
-function Cart({  }) {
+function Cart() {
   const [user, setUser] = useState(null);
   const [items, setItems] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [address, setAddress] = useState("");
-const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
-  
   // Fetch logged-in user
   useEffect(() => {
     axios
@@ -18,25 +18,29 @@ const [paymentMethod, setPaymentMethod] = useState("");
       .catch(() => setUser(null));
   }, []);
 
-    useEffect(() => {
-      if (user) {
-        fetchCart();
-      }
-    }, [user]);
+  // Fetch cart if user is logged in
+  useEffect(() => {
+    if (user) {
+      fetchCart();
+    }
+  }, [user]);
 
   const fetchCart = () => {
-    axios.get("http://localhost:5000/api/cart", { withCredentials: true })
-      .then(res => setItems(res.data))
+    axios
+      .get("http://localhost:5000/api/cart", { withCredentials: true })
+      .then((res) => setItems(res.data))
       .catch(() => alert("Failed to load cart"));
   };
 
   const updateQuantity = (bookId, newQty) => {
     if (newQty < 1) return;
 
-    axios.put("http://localhost:5000/api/cart", {
-      book_id: bookId, // ✅ Use correct key name
-      quantity: newQty
-    }, { withCredentials: true })
+    axios
+      .put(
+        "http://localhost:5000/api/cart",
+        { book_id: bookId, quantity: newQty },
+        { withCredentials: true }
+      )
       .then(fetchCart)
       .catch(() => alert("Failed to update quantity"));
   };
@@ -46,22 +50,26 @@ const [paymentMethod, setPaymentMethod] = useState("");
       return alert("Please enter address and select a payment method");
     }
 
-
-    const total = items.reduce((sum, item) => sum + item.book_id.price * item.quantity, 0);
-    const orderItems = items.map(item => ({
+    const total = items.reduce(
+      (sum, item) => sum + item.book_id.price * item.quantity,
+      0
+    );
+    const orderItems = items.map((item) => ({
       book_id: item.book_id._id,
-      quantity: item.quantity
+      quantity: item.quantity,
     }));
 
-   axios.post("http://localhost:5000/api/orders", {
-  items: orderItems,
-  total_price: total,
-  shipping_address: address,
-  payment_method: paymentMethod,
-  fromCart: true, // ✅ Added
-}, { withCredentials: true })
-
-  
+    axios
+      .post(
+        "http://localhost:5000/api/orders",
+        {
+          items: orderItems,
+          total_price: total,
+          shipping_address: address,
+          payment_method: paymentMethod,
+        },
+        { withCredentials: true }
+      )
       .then(() => {
         alert("Order placed!");
         setItems([]);
@@ -73,59 +81,69 @@ const [paymentMethod, setPaymentMethod] = useState("");
   return (
     <div className="d-flex">
       <Sidebar user={user} />
-      <div className="container mt-4" style={{ marginLeft: "220px" }}>
-        <h2 className="mb-4">🛒 Your Cart</h2>
+      <div className="cart-wrapper">
+        <h2 className="cart-heading"><img src="/icons/cart.png" alt="Cart" className="cart-icon" /> Your Cart</h2>
 
         {!user ? (
-          <p>Please <a href="/login">login</a> to view your cart.</p>
+          <p>
+            Please <a href="/login">login</a> to view your cart.
+          </p>
         ) : items.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
           <>
-            {items.map((item, i) => (
-              <div className="card mb-3 shadow" key={i}>
-                <div className="row g-0">
-                  <div className="col-md-3">
+            <div className="cart-box">
+              {items.map((item, i) => (
+                <div className="cart-item" key={i}>
+                  <div className="book-card-img">
                     <img
                       src={item.book_id?.image || "https://via.placeholder.com/150"}
                       alt={item.book_id?.title}
-                      className="img-fluid rounded-start"
-                      style={{ height: "100%", objectFit: "cover" }}
                     />
                   </div>
-                  <div className="col-md-9">
-                    <div className="card-body">
-                      <h5 className="card-title">{item.book_id?.title}</h5>
-                      <p className="card-text">Author: {item.book_id?.author}</p>
-                      <p className="card-text">Price: ₹{item.book_id?.price}</p>
-                      <div className="d-flex align-items-center">
-                        <button className="btn btn-outline-secondary btn-sm me-2"
-                          onClick={() => updateQuantity(item.book_id._id, item.quantity - 1)}>
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button className="btn btn-outline-secondary btn-sm ms-2"
-                          onClick={() => updateQuantity(item.book_id._id, item.quantity + 1)}>
-                          +
-                        </button>
-                      </div>
+                  <div className="book-details">
+                    <h5 className="book-title">{item.book_id?.title}</h5>
+                    <p className="text-muted">Author: {item.book_id?.author}</p>
+                    <div className="book-meta">
+                      <span className="price">₹{item.book_id?.price}</span>
+                    </div>
+                    <div className="quantity-controls">
+                      <button
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() =>
+                          updateQuantity(item.book_id._id, item.quantity - 1)
+                        }
+                      >
+                        −
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() =>
+                          updateQuantity(item.book_id._id, item.quantity + 1)
+                        }
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
 
-            <div className="text-end">
-              <button className="btn btn-success mt-3" onClick={() => setShowForm(true)}>
-                ✅ Place Order
+            <div className="text-end mt-3">
+              <button
+                className="btn btn-success"
+                onClick={() => setShowForm(true)}
+              >
+                 Place Order
               </button>
             </div>
           </>
         )}
 
-        {/* Modal-like form */}
-        {showForm && (
-          <div className="card mt-4 p-4 shadow">
+        {showForm && user && (
+          <div className="order-form">
             <h4>Shipping Details</h4>
             <div className="mb-3">
               <label>Address</label>
@@ -141,21 +159,29 @@ const [paymentMethod, setPaymentMethod] = useState("");
             <div className="mb-3">
               <label>Payment Method</label>
               <select
-                 className="form-select"
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                   required
+                className="form-select"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                required
               >
-  <option value="" disabled>Select Payment Method</option>
-  <option value="Cash on Delivery">Cash on Delivery</option>
-  <option value="Online">Online</option>
-</select>
-
+                <option value="" disabled>
+                  Select Payment Method
+                </option>
+                <option value="Cash on Delivery">Cash on Delivery</option>
+                <option value="Online">Online</option>
+              </select>
             </div>
 
             <div className="d-flex justify-content-end">
-              <button className="btn btn-secondary me-2" onClick={() => setShowForm(false)}>Cancel</button>
-              <button className="btn btn-primary" onClick={handleOrder}>🛍️ Confirm & Pay</button>
+              <button
+                className="btn btn-secondary me-2"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleOrder}>
+                🛍️ Confirm & Pay
+              </button>
             </div>
           </div>
         )}
