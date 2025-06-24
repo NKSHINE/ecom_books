@@ -1,30 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './home.css';
 
-function Sidebar({ user, onSearch }) {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    onSearch(value); // Call parent with search term
-  };
-
+function Sidebar({ user }) {
   return (
     <div className="top-navbar">
       <div className="navbar-left">
         <Link to="/home" className="logo">PlayBooks</Link>
-        <input
-          type="text"
-          className="search-bar"
-          placeholder="Search books..."
-          value={searchTerm}
-          onChange={handleSearch}
-        />
+        <input type="text" className="search-bar" placeholder="Search books..." />
       </div>
 
       <ul className="navbar-links">
+        <li>
+          <Link to="/admin">
+            <img src="/icons/cart.png" alt="Admin" className="nav-icon white-icon" />Admin
+          </Link>
+        </li>
         <li>
           <Link to="/cart">
             <img src="/icons/cart.png" alt="Cart" className="nav-icon white-icon" />Cart
@@ -48,13 +39,6 @@ function Sidebar({ user, onSearch }) {
                 <img src="/icons/user.png" alt="Profile" className="nav-icon white-icon" />Profile
               </Link>
             </li>
-            {user.role === 'admin' && (
-              <li>
-                <Link to="/admin">
-                  <img src="/icons/setting.png" alt="Admin" className="nav-icon white-icon" />Admin
-                </Link>
-              </li>
-            )}
             <li>
               <Link to="/logout">Logout</Link>
             </li>
@@ -64,9 +48,7 @@ function Sidebar({ user, onSearch }) {
             <li>
               <Link to="/login">Login</Link>
             </li>
-            <li>
-              <Link to="/signup">Sign Up</Link>
-            </li>
+            
           </>
         )}
       </ul>

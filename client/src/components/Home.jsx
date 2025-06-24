@@ -61,6 +61,19 @@ function Home() {
       maxPrice: ''
     });
   };
+  const handleSearch = (term) => {
+  if (!term.trim()) {
+    setBooks(allBooks); // show all if empty
+  } else {
+    const filtered = allBooks.filter(book =>
+      book.title.toLowerCase().includes(term.toLowerCase()) ||
+      book.author.toLowerCase().includes(term.toLowerCase()) ||
+      book.genre.toLowerCase().includes(term.toLowerCase())
+    );
+    setBooks(filtered);
+  }
+};
+
 
   const genres = [...new Set(allBooks.map(b => b.genre).filter(Boolean))];
   const authors = [...new Set(allBooks.map(b => b.author).filter(Boolean))];
@@ -68,7 +81,8 @@ function Home() {
 
   return (
     <div className="home-container">
-      <Sidebar user={user} />
+      <Sidebar user={user} onSearch={handleSearch} />
+
 
       <div className="main-content">
         {/* Filter Section */}

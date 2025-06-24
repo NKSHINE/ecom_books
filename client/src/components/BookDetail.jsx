@@ -14,6 +14,7 @@ function BookDetail() {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [addedToCart, setAddedToCart] = useState(false);
+  const [addedToWishlist, setAddedToWishlist] = useState(false);
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/books/${id}`).then((res) => {
@@ -23,6 +24,17 @@ function BookDetail() {
     axios.get(`http://localhost:5000/api/reviews/${id}`).then((res) => {
       setReviews(res.data);
     });
+
+
+
+// Inside useEffect:
+axios.get("http://localhost:5000/api/wishlist", { withCredentials: true })
+  .then(res => {
+    const isInWishlist = res.data.some(item => item.book_id._id === id);
+    setAddedToWishlist(isInWishlist);
+  })
+  .catch(() => console.log("Wishlist check failed"));
+
 
     axios
       .get("http://localhost:5000/api/cart", { withCredentials: true })
@@ -78,15 +90,19 @@ function BookDetail() {
   };
 
   const handleAddToWishlist = () => {
-    axios
-      .post(
-        "http://localhost:5000/api/wishlist",
-        { book_id: id },
-        { withCredentials: true }
-      )
-      .then(() => alert("Added to wishlist"))
-      .catch(() => alert("Failed to add to wishlist"));
-  };
+  axios
+    .post(
+      "http://localhost:5000/api/wishlist",
+      { book_id: id },
+      { withCredentials: true }
+    )
+    .then(() => {
+      alert("Added to wishlist");
+      setAddedToWishlist(true);
+    })
+    .catch(() => alert("Failed to add to wishlist"));
+};
+
 
   if (!book) return <p>Loading...</p>;
 
@@ -143,7 +159,16 @@ function BookDetail() {
                     </button>
                   )}
                   <button className="btn btn-success" onClick={handleBuyNow}>Buy Now</button>
-                  <button className="btn btn-warning" onClick={handleAddToWishlist}>Add to Wishlist</button>
+                  {addedToWishlist ? (
+  <button className="btn btn-outline-warning" disabled>
+    ✅ Added to Wishlist
+  </button>
+) : (
+  <button className="btn btn-warning" onClick={handleAddToWishlist}>
+    Add to Wishlist
+  </button>
+)}
+
                 </div>
               </div>
             </div>
