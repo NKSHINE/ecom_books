@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
-import "./Wishlist.css"; // make sure to create this file
+import "./Wishlist.css";
 
 function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -47,29 +47,31 @@ function Wishlist() {
         ) : wishlist.length === 0 ? (
           <p className="text-center">No items in wishlist.</p>
         ) : (
-          <div className="wishlist-wrapper mx-auto">
-            <div className="row">
-              {wishlist.map((item) => (
-                <div key={item._id} className="col-md-3 col-sm-6 mb-4">
-  <div className="book-card">
-    <img
-      src={item.book_id?.image}
-      className="book-img"
-      alt={item.book_id?.title}
-    />
-    <h5>{item.book_id?.title}</h5>
-    <div className="book-meta d-flex justify-content-between align-items-center">
-      <span>{item.book_id?.author}</span>
-      <button
-        className="btn btn-sm btn-outline-danger"
-        onClick={() => handleRemove(item._id)}
-      >
-        Remove
-      </button>
-    </div>
-  </div>
-</div>
-              ))}
+          <div className="d-flex justify-content-center">
+            <div className="wishlist-wrapper">
+              <div className="row">
+                {wishlist.map((item) => (
+                  <div key={item._id} className="wishlist-item col-md-3 col-sm-6 mb-4">
+                    <div className="book-card2">
+                      <img
+                        src={item.book_id?.image}
+                        className="book-img"
+                        alt={item.book_id?.title}
+                      />
+                      <h5>{item.book_id?.title}</h5>
+                      <div className="book-meta d-flex justify-content-between align-items-center">
+                        <span className="author">{item.book_id?.author}</span>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleRemove(item._id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

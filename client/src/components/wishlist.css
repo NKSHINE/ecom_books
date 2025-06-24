@@ -1,33 +1,32 @@
 .wishlist-wrapper {
-  max-width: 100%;
-  background-color: #ffffff;
-  padding: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .wishlist-item {
-  transition: transform 0.2s ease;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
-.wishlist-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-}
-
-.wishlist-img {
-  height: 200px;
-  object-fit: cover;
-  border-bottom: 1px solid #eee;
-}
-.book-card {  
-  width: 220px;
+.book-card2 {
+  width: 100%;
+  max-width: 720px;
   background-color: white;
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
   transition: transform 0.2s ease;
+}
+
+.book-card2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .book-img {
@@ -37,7 +36,7 @@
   border-radius: 4px;
 }
 
-.book-card h5 {
+.book-card2 h5 {
   font-size: 1rem;
   margin: 0.5rem 0 0.25rem;
   white-space: nowrap;
@@ -52,4 +51,12 @@
   font-size: 0.9rem;
   color: #555;
   margin-top: 0.25rem;
+}
+
+.book-meta .author {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  display: inline-block;
 }
