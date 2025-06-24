@@ -2,19 +2,27 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 
-function Cart({ user }) {
+function Cart({  }) {
+  const [user, setUser] = useState(null);
   const [items, setItems] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [address, setAddress] = useState("");
 const [paymentMethod, setPaymentMethod] = useState("");
 
   
+  // Fetch logged-in user
   useEffect(() => {
-   
-      console.log("Cart user:", user); 
-      fetchCart();
-    
-  }, [user]);
+    axios
+      .get("http://localhost:5000/api/auth/user", { withCredentials: true })
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
+  }, []);
+
+    useEffect(() => {
+      if (user) {
+        fetchCart();
+      }
+    }, [user]);
 
   const fetchCart = () => {
     axios.get("http://localhost:5000/api/cart", { withCredentials: true })
@@ -64,11 +72,13 @@ const [paymentMethod, setPaymentMethod] = useState("");
 
   return (
     <div className="d-flex">
-      <Sidebar />
+      <Sidebar user={user} />
       <div className="container mt-4" style={{ marginLeft: "220px" }}>
         <h2 className="mb-4">🛒 Your Cart</h2>
 
-        {items.length === 0 ? (
+        {!user ? (
+          <p>Please <a href="/login">login</a> to view your cart.</p>
+        ) : items.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
           <>

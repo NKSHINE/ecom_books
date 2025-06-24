@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "./Sidebar"; // optional if you're using a fixed sidebar
+import Sidebar from "./Sidebar";
 
 function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
-  
+  const [user, setUser] = useState(null);
+
+  // Check if user is logged in
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/wishlist", { withCredentials: true })
-      .then((res) => setWishlist(res.data))
-      .catch((err) => console.error("Failed to fetch wishlist:", err));
+      .get("http://localhost:5000/api/auth/user", { withCredentials: true })
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
   }, []);
+
+  // Fetch wishlist only if user is logged in
+  useEffect(() => {
+    if (user) {
+      axios
+        .get("http://localhost:5000/api/wishlist", { withCredentials: true })
+        .then((res) => setWishlist(res.data))
+        .catch((err) => console.error("Failed to fetch wishlist:", err));
+    }
+  }, [user]);
 
   const handleRemove = (id) => {
     axios
@@ -23,10 +35,13 @@ function Wishlist() {
 
   return (
     <div className="d-flex">
-      <Sidebar /> {/* Optional */}
+      <Sidebar user={user} />
       <div className="container mt-4" style={{ marginLeft: "220px" }}>
         <h2 className="mb-4">💖 Your Wishlist</h2>
-        {wishlist.length === 0 ? (
+
+        {!user ? (
+          <p>Please <a href="/login">login</a> to view your wishlist.</p>
+        ) : wishlist.length === 0 ? (
           <p>No items in wishlist.</p>
         ) : (
           <div className="row">
