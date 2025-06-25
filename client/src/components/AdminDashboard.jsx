@@ -7,6 +7,7 @@ import ManageBooksSection from "./ManageBooksSection.jsx";
 import ManageUsersSection from "./ManageUsersSection";
 import ManageOrdersSection from "./ManageOrdersSection";
 import "./home.css"; // Assuming sidebar styles are here
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
   const [activeSection, setActiveSection] = useState("stats");
@@ -15,6 +16,31 @@ function AdminDashboard() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [fetchTrigger, setFetchTrigger] = useState(false);
+  const [isAdminChecked, setIsAdminChecked] = useState(false);
+
+  const navigate = useNavigate();
+
+
+  const checkAdmin = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/auth/user", {
+        withCredentials: true,
+      });
+
+      if (res.data.role !== "admin") {
+        alert("Access denied: Not an admin");
+        
+        navigate("/login");
+      }else {
+      setIsAdminChecked(true); // allow rendering only if admin
+    }
+    } catch (err) {
+      console.error("Auth check failed:", err);
+      alert("You are not logged in");
+     
+      navigate("/login");
+    }
+  };
 
   const fetchStats = async () => {
     const res = await axios.get("http://localhost:5000/api/admin/stats");
@@ -37,11 +63,15 @@ function AdminDashboard() {
   };
 
   useEffect(() => {
+    checkAdmin();
     fetchStats();
     fetchBooks();
     fetchOrders();
     fetchUsers();
   }, [fetchTrigger]);
+
+  if (!isAdminChecked) return null; // Block rendering until check completes
+
 
   return (
     <div>
